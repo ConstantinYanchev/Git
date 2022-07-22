@@ -1,0 +1,71 @@
+#include <iostream>
+#include <cmath>
+
+using namespace std;
+
+float solve(float x) {
+	float answer;
+	answer = x * x;
+	return answer;
+}
+
+float derivative(float x_prev) {
+	float answer;
+	answer = 2 * x_prev;
+	return answer;
+}
+
+void solving(int i, float piece, float epsilon, float ax_global, float bx_global) {
+	float ax, bx;
+	ax = ax_global + piece * i;
+	bx = ax_global + piece * (i + 1);
+	if (ax * bx < 0) {
+		float x_now = bx / 2;
+		float x_prev;
+		x_prev = x_now;
+		x_now = x_prev - (solve(x_prev) / derivative(x_prev));
+		while (epsilon < abs(x_now - x_prev)) {
+			x_prev = x_now;
+			x_now = x_prev - (solve(x_prev) / derivative(x_prev));
+		}
+		cout << i + 1 << ": " << '\n';
+		cout << "x = " << x_now << '\n' << '\n';
+	}
+
+	else {
+		cout << i + 1 << ": " << '\n';
+		cout << "Wrong function" << '\n' << '\n';
+	}
+}
+
+int main() {
+	float epsilon = 0.0001F;
+	float ax_global = 1;
+	float bx_global = 0;
+	while (ax_global > bx_global) {
+		cout << "Please, enter correct interval" << '\n';
+		cout << "Enter the left side ";
+		cin >> ax_global;
+		while (ax_global == 0) {
+			cout << "Enter the left side (the previous number does not match) ";
+			cin >> ax_global;
+		}
+		cout << "Enter the right side ";
+		cin >> bx_global;
+		while (bx_global == 0) {
+			cout << "Enter the right side (the previous number does not match) ";
+			cin >> bx_global;
+		}
+	}
+	float delimeter;
+	cout << "How many segments do we split the plot into? ";
+	cin >> delimeter;
+	float last_stand = ax_global;
+	float piece = (bx_global - ax_global) / delimeter;
+	cout << "y = x^2" << "\n";
+
+	for (int i = 0; i <= (delimeter - 1); i++) {
+		solving(i, piece, epsilon, ax_global, bx_global);
+	}
+	return 0;
+}
